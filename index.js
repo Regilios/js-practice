@@ -1,2 +1,2 @@
 console.log('Hello JS');
-console.log('Updated version');п
+console.log('Updated version');
