@@ -2,11 +2,25 @@ const adder = (initial = 0) => ({
   value: initial,
   steps: [initial],
   add(value) { // тоже что  add: function(value) { }
-    this.steps.push(value);
     this.value += value;
+    this.steps.push(value);
+    
     return this;
   }
 });
+
+const adder2 = (initial = 0) => ({
+  value: initial,
+  steps: [initial],
+  add(value) { 
+    this.value += value; // value → передаём значение пришедшее в add из вне
+    this.steps.push(this.value); // this.value → обращаемся к значению внутри adder
+
+    return this;
+  }
+});
+
+
 
 const Adder = class {
   constructor(initial = 0) {
@@ -24,8 +38,12 @@ const Adder = class {
 // Usage
 
 {
+  const { value, steps: steps2 } = adder2(5).add(-8).add(11);
+  console.log(steps2); // [5, -3, 8]
+
   const { value: myValue, steps } = adder(5).add(-8).add(11);
-  console.log(myValue); 
+  console.log(steps); // [5, -8, 13]
+
   /**
    * JS берёт свойство value из объекта adder
    * Сохраняет его значение  в новой переменной с именем myValue
