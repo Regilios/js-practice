@@ -60,7 +60,7 @@ const Adder = class {
   const { a, b } = { a: 1, b: "sssss"};
   /**
    * {a, b} — это не идентификатор , это шаблон , по которому JS извлекает данные из объекта.
-   * т.е. ту созданые 2 переменыне const a const b а не объект {a, b}!
+   * т.е. тут созданы 2 переменыне const a const b а не объект {a, b}!
    */
   console.log(typeof(a));
   console.log(typeof(b));
