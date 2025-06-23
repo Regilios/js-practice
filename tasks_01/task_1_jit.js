@@ -1,21 +1,26 @@
 function add(a, b) {
     return a + b;
 }
-// Warm-up — разогреваем функцию с одинаковыми типами
+
+// Версия 1 — с числами
 for (let i = 0; i < 100000; i++) {
-    add(i, i);
+    add(1, 2);
 }
-// Проверяем, что функция оптимизирована
+
 %OptimizeFunctionOnNextCall(add);
+add(1, 2);
 
-add(42, 42);
-console.log("Warn!");
+console.log("First optimized version");
 
+// Версия 2 — с объектами
+for (let i = 0; i < 100000; i++) {
+    add({}, {});
+}
 
-// Теперь "ломаем" предположение о типах
-add({},[]); // передаем объект
+%OptimizeFunctionOnNextCall(add);
+add({}, {});
 
-console.log("Done!");
+console.log("Second optimized version");
 
 
 /**
