@@ -17,9 +17,6 @@ console.log(count);
     VariableEnvironment - { counter: [function], count: <uninitialized>, increment: <uninitialized> }
     Процесс хостинга (hoisting)
 
-   
-  
-
     Execution Phase (Фаза выполнения)
     1.  Вызов counter() — создаётся новый Execution Context
         GlobalLexicalEnvironment = {
@@ -96,6 +93,13 @@ console.log(count);
         └──> counter() → создаёт новое окружение с count = 0 и возвращает объект с геттером и инкрементом
         ↑
         └──> global → запуск кода
+
+        (Вид вызова)
+        [global]
+        └──> counter()
+                └──> increment() // мутирует count внутри counter
+        └──> console.log(count) // обращается к геттеру, который читает count
+
 
         [Lexical Environments]
 
