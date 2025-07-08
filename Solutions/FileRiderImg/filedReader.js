@@ -1,61 +1,49 @@
 'use strict';
 
-const FileCheckFormat = class { 
+const ImageTypeDetector = class { 
 
-  constructor(initialFile = null, initialBlob = null) {
+  constructor(initialFile = null) {
     this.file = initialFile;
-    this.blob = initialBlob;
   }
 
-  detectImageType(header) {
-    let typeFile = 'Не подходящий формат файла';
-    // PNG : 89 50 4E 47 
-    if (header[0] === '89' && header[1] === '50' && header[2] === '4E' && header[3] === '47') {
-        typeFile = 'png';
-    } 
-    // GIF: 47 49 46 38
-    else if (header[0] === '47' && header[1] === '49' && header[2] === '46' && header[3] === '38') {
-        typeFile = 'gif';
-    } 
-    // JPEG: FF D8 FF xx
-    else if (header[0] === 'FF' && header[1] === 'D8' && header[2] === 'FF') {
-        typeFile = 'jpeg';
-    } 
-    // WEBP: RIFF xxxx WEBP
-    else if ((header[0] === '52' && header[1] === '49' && header[2] === '46' && header[3] === '46') || (header[0] === '57' && header[1] === '45' && header[2] === '42' && header[3] === '50' && header[4] === '38')) {
-        typeFile = 'webp';
-    }
-    return typeFile;
-  }
+  static SIGNATURES = [
+    // [[0x47, 0x49, 0x46, 0x38], 'gif'],
+    // [[0x25, 0x50, 0x44, 0x46], 'pdf'],
+    [[0xFF, 0xD8, 0xFF], 'jpeg'],
+    [[0x89, 0x50, 0x4E, 0x47], 'png'],
+    [[0x52, 0x49, 0x46, 0x46], 'webp'],
+    [[0x57, 0x45, 0x42, 0x50, 0x38], 'webp'],
+    [[0x42, 0x4D], 'bmp']
+  ];
 
-  checkFile() {
-    const input = document.getElementById('dsvcUploadFiles');
-    const output = document.getElementById('output');
+  checkFile(inputFile) {
+    const input = document.getElementById(inputFile);
     const reader = new FileReader();
     
     input.addEventListener('change', (e) => {
       this.file = e.target.files[0];
       if (!this.file) return;
-      this.blob = this.file.slice(0, 32);
-  
+     
       reader.onload = (event) => {
         const buffer = event.target.result;
         const bytes = new Uint8Array(buffer);
-        const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ').split(" ");
-        const type = this.detectImageType(hex);
-        output.textContent = `Формат: ${type}`;
+        const type = this.constructor.SIGNATURES.find(([sig]) => {
+          sig.every((elem,i) => bytes[i] == elem)?.[1] || 'Не подходящий формат файла';
+        });
+        /**
+         * ([sig]) =>  деструктуризация : Каждый элемент массива и выбираешь только сигнатуру (первый элемент пары).
+         * Это работает потому, что find() передаёт в колбэк каждый элемент массива, и ты можешь сразу деструктурировать его в параметре. 
+        */
+        console.log(`Формат: ${type}`);
       };
 
       reader.onerror = (event) => {
         console.error("Ошибка чтения файла", event.target.error);
       };
-  
-      reader.readAsArrayBuffer(this.blob);
+
+      const blob = this.file.slice(0, 32);
+      reader.readAsArrayBuffer(blob);
     });   
   } 
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const fileChecker = new FileCheckFormat(); 
-  fileChecker.checkFile();
-});

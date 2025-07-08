@@ -15,6 +15,13 @@
     </style>
     <label for="imageChange">Выбрать файл</label>
     <input type="file" id="dsvcUploadFiles" name="imageChange">
-    <div id="output"></div>
+    <!-- <div id="output"></div> -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const fileChecker = new ImageTypeDetector(); 
+            fileChecker.checkFile('dsvcUploadFiles');
+        }); 
+    </script>
 </body>
 </html>
