@@ -27,14 +27,15 @@ const ImageTypeDetector = class {
       reader.onload = (event) => {
         const buffer = event.target.result;
         const bytes = new Uint8Array(buffer);
-        const type = this.constructor.SIGNATURES.find(([sig]) => {
-          sig.every((elem,i) => bytes[i] == elem)?.[1] || 'Не подходящий формат файла';
-        });
+        const format = this.constructor.SIGNATURES.find(([sig]) => {
+            if (sig.length > bytes.length) return false;
+            return sig.every((elem, i) => bytes[i] === elem);
+        })?.[1] || 'Не подходящий формат файла';
         /**
          * ([sig]) =>  деструктуризация : Каждый элемент массива и выбираешь только сигнатуру (первый элемент пары).
          * Это работает потому, что find() передаёт в колбэк каждый элемент массива, и ты можешь сразу деструктурировать его в параметре. 
         */
-        console.log(`Формат: ${type}`);
+        console.log(`Формат: ${format}`);
       };
 
       reader.onerror = (event) => {
