@@ -36,6 +36,7 @@ const ImageTypeDetector = class {
          * Это работает потому, что find() передаёт в колбэк каждый элемент массива, и ты можешь сразу деструктурировать его в параметре. 
         */
         console.log(`Формат: ${format}`);
+        return format;
       };
 
       reader.onerror = (event) => {
