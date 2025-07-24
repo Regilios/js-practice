@@ -16,6 +16,7 @@ class ImageTypeDetector {
 
   /**
    * Создает экземпляр ImageTypeDetector
+   * @constructor
    * @param {string|HTMLInputElement} input - ID input элемента или сам элемент
    * @param {Object} options - Настройки
    * @param {Function} options.onDetect - Колбек при успешном определении
