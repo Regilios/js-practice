@@ -193,3 +193,89 @@ console.log(o.a); // logs 38
  * (Это фактически делает выражение "this.a = 37;" "мёртвым" кодом. 
  * Он не является буквально нерабочим, так как он выполняется, но он может быть изъят без каких-либо внешних эффектов.)
  */
+
+
+
+
+
+
+/**
+ * call — вызов функции с указанием this и аргументами
+ * func.call(thisArg, arg1, arg2, ...)
+ */
+function introduce(age, city) {
+  console.log(`Меня зовут ${this.name}, мне ${age}, живу в ${city}`);
+}
+
+const person = { name: "Иван" };
+introduce.call(person, 25, "Москва");
+// → "Меня зовут Иван, мне 25, живу в Москва"
+
+
+
+
+/**
+ * apply — как call, но аргументы передаются массивом
+ */
+{
+function introduce(age, city) {
+  console.log(`Меня зовут ${this.name}, мне ${age}, живу в ${city}`);
+}
+
+const person = { name: "Мария" };
+const args = [30, "СПб"];
+introduce.apply(person, args);
+// → "Меня зовут Мария, мне 30, живу в СПб"
+}
+
+
+
+
+/**
+ * bind — создаёт новую функцию с привязанным this
+ * const boundFunc = func.bind(thisArg, arg1, arg2, ...)
+ */
+{
+function introduce(age, city) {
+  console.log(`Меня зовут ${this.name}, мне ${age}, живу в ${city}`);
+}
+
+const person = { name: "Олег" };
+// Создаём новую функцию, где this всегда = person
+const introduceOleg = introduce.bind(person);
+
+introduceOleg(40, "Казань");
+// → "Меня зовут Олег, мне 40, живу в Казань"
+}
+
+
+
+
+class Button {
+  constructor(name) {
+    this.name = name;
+  }
+
+  click() {
+    console.log(`${this.name} нажата`);
+  }
+}
+
+const button = new Button("Кнопка");
+// Без bind: this потерян!
+// document.addEventListener('click', button.click); // this = window
+// С bind: this сохранён
+document.addEventListener('click', button.click.bind(button));
+
+
+
+/**
+ * Вызывая foo(..) с new впереди нее, мы конструируем новый объект и устанавливаем этот новый объект как this для вызова foo(..).
+ * Таким образом new — единственный путь, которым this при вызове функции может быть привязан. Мы называем это привязкой new.
+ */
+function foo(a) {
+	this.a = a;
+}
+
+var bar = new foo( 2 );
+console.log( bar.a ); // 2
