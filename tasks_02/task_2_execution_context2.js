@@ -1,14 +1,14 @@
- function counter() {
-    let count = 0;
-    return {
-        count,
-        increment: () => ++count
-    };
-}
+    function counter() {
+        let count = 0;
+        return {
+            count,
+            increment: () => ++count
+        };
+    }
 
-const { count, increment } = counter();
-increment();
-console.log(count);
+    const { count, increment } = counter();
+    increment();
+    console.log(count);
 
 /** 
  *  💡💡💡💡
