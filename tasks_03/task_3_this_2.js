@@ -182,3 +182,54 @@
         document.body.addEventListener("click", doLogThis.bind({"yo": "yo"}));
     })();
 }
+
+
+/*
+    В non strict режиме this проходит через toObject (преобразуется к объекту через конструтктор)
+*/
+{
+    String.prototype.doThingStrict = function() {
+        "use strict";
+         console.log("this is" , this instanceof Object, this)
+    }
+    String.prototype.doThing = function() {
+        console.log("this is" , this instanceof Object, this)
+    }
+    Number.prototype.doThing = function() {
+        console.log("this is" , this instanceof Object, this)
+    }
+    "yo".doThingStrict(); // this is false yo
+    "yo".doThing();// this is true String {'yo'}
+    1..doThing();// this is true Number {1}
+}
+
+/**
+ *  theObj.returnFunction — это ссылка на функцию, но не вызов.
+    Эта ссылка передаётся в doSayName как аргумент.
+    Внутри doSayName происходит: doThing(); // ← это вызов: returnFunction()
+    Но теперь returnFunction вызывается без контекста — просто как doThing(), а не как obj.returnFunction().
+    Поскольку "use strict" включён: this внутри returnFunction → undefined
+    Теперь создаётся стрелочная функция () => console.log("this is", this)
+    Она захватывает this из окружающей области — а это undefined!
+ */
+
+{
+    "use strict"
+    const theObj = { 
+        name: '1111',
+        returnFunction: function() {
+            var doArrowThing = (
+                () => console.log("this is" , this)
+            );
+            return doArrowThing;
+        }
+    }
+    const theSuperObj = {
+        name: '2222',
+        doSayName: function(doThing) {
+            doThing();
+        }
+    }
+    theSuperObj.doSayName(theObj.returnFunction); // this is undefinded
+    theSuperObj.doSayName(theObj.returnFunction()); // this is {name: '1111', returnFunction: ƒ}
+}
