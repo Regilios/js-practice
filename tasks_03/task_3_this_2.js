@@ -154,7 +154,7 @@
     }
 
     var doLogThis = theObj.doLogThis; 
-    setTimeout(() => theObj.doLogThis(), 1); // Выведет: "this is 1111" 
+    setTimeout(() => theObj.doLogThis(), 1); // Выведет: this is {name: '1111', doLogThis: ƒ}
     setTimeout(doLogThis, 1); // this is пустая строка - т.к. это ссылка на функцию хоть и в дот нотации но не её вызов. 
                               // Сет тайм вызовёт просто doLogThis() в контексте DOM и вернёт Window или global obj(в node), а у Window есть свойство name которое пусто.
 
