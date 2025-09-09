@@ -2,8 +2,8 @@ var MV = {
     activeMenu: function() {
         document.querySelectorAll('.dsvc-automenu').forEach((el) => {
             // ------------------- created elements -------------------
-            let ul = el.querySelector('ul')
-            let flagMoreCreated = false
+            let ul = el
+
             const liMore = document.createElement('li')
             liMore.className = 'more'
             const liClean = document.createElement('li')
@@ -15,15 +15,40 @@ var MV = {
             ulDrop.className = 'more-drop'
             liMore.append(divMoreText, ulDrop)
 
+            let flagMoreCreated = false // проверка создания more (ещё)
+            let itemsFirstLi = null; // первый li в drop 
+            let itemsWidthFirstLi = null; // ширина первого li в drop 
+            let widthliInner = null; // ширина первого li в drop с учётом паддингов
+            let widthLiClean = null; // ширина заполнителя на месте убранных li
+            let pLeft = null; // padding left li
+            let pRight = null; // padding right li
+            let listLiUpdated = null; // текущий список li с учётом more clean
+            let listLi = null; // основной список li без more clean
+            let positionAppend = 0; // позиция для добавления li из drop обртано на место с учётом текущего основно списка
+            let ulBound = 0; // right позиция ul на экране
+            let widthMore = 0 // ширина элемента more (ещё)
+            let openListneer = false // проверка создания слушателя для more (ещё)
+
             // ------------------- helpers -------------------
-            function openDrop() {
+            function openDrop(liMore, ulDrop) {
                 let heightMore = liMore.getBoundingClientRect().height
-                liMore.style.setProperty('--height-more', heightMore)
-                liMore.addEventListener('mouseover', function() {
+                ulDrop.style.setProperty('--height-more', heightMore + 'px')
+
+                liMore.addEventListener('mouseenter', function() {
                     if (!liMore.classList.contains('open')) {
                         liMore.classList.add('open')
                     }
                 })
+                liMore.addEventListener('mouseleave', function() {
+                    removeOpenClass(liMore);
+                })
+                ulDrop.addEventListener('mouseleave', function() {
+                    removeOpenClass(ulDrop);
+                })
+
+                function removeOpenClass(wrapper) {
+                    wrapper.classList.remove('open');
+                }
             }
 
             function wrapContent(element, wrapperTag = 'div') {
@@ -57,19 +82,7 @@ var MV = {
             }
 
             // ------------------- main  -------------------
-            let itemsWidthFirstLi = null;
-            let itemsFirstLi = null;
-            let widthLiClean = null;
-            let widthliInner = null;
-            let pLeft = null;
-            let pRight = null;
-            let listLiUpdated = null;
-            let positionAppend = 0;
-            let listLi = null;
-            let ulBound = 0;
-            let widthMore = 0 // длина more
-
-            function checkWidthMenu() {
+            function buildMenu() {
                 if (!listLi) {
                     listLi = getList()
                 }
@@ -79,7 +92,7 @@ var MV = {
                     pRight = parseInt(getComputedStyle(listLi[0]).paddingRight)
                 }
 
-                ulBound = ul.getBoundingClientRect().right //позиция ul
+                ulBound = ul.getBoundingClientRect().right
 
                 Array.from(listLi).reverse().forEach(element => {
                     let liBound = element.getBoundingClientRect().right
@@ -97,19 +110,25 @@ var MV = {
                         wrapContent(element)
                         ulDrop.prepend(element);
 
+                        if (!openListneer) {
+                            openDrop(liMore, ulDrop)
+                            openListneer = true;
+                        }
+
                         itemsFirstLi = null
                         itemsWidthFirstLi = null
                     }
                 });
                 listLi = null
+
             }
 
-            function resizeMenu() {
+            function disassemblyMenu() {
                 if (!itemsFirstLi) {
                     itemsFirstLi = ul.querySelector('ul.more-drop li:first-child');
                 }
                 if (itemsFirstLi === null || itemsFirstLi === undefined) {
-                    checkWidthMenu()
+                    buildMenu()
                 } else {
                     itemsWidthFirstLi = itemsFirstLi.querySelector('.wrapper');
                     if (ulDrop.childNodes.length > 1) {
@@ -132,6 +151,7 @@ var MV = {
                             liMore.remove();
                             liClean.remove();
                             flagMoreCreated = false;
+                            openListneer = false;
                         }
 
                         positionAppend = 0;
@@ -142,7 +162,7 @@ var MV = {
                         pLeft = null;
                         pRight = null;
                     } else {
-                        checkWidthMenu()
+                        buildMenu()
                     }
                 }
             }
@@ -155,8 +175,8 @@ var MV = {
                 };
             }
 
-            window.addEventListener('resize', debounce(resizeMenu, 10));
-            checkWidthMenu()
+            window.addEventListener('resize', debounce(disassemblyMenu, 50));
+            buildMenu()
         })
     },
 }
