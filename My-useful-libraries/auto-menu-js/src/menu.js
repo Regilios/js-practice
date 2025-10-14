@@ -1,20 +1,20 @@
 var MV = {
     activeMenu: function() {
-        document.querySelectorAll('.dsvc-am').forEach((el) => {
+        document.querySelectorAll('.mul-am').forEach((el) => {
             requestAnimationFrame(() => {
                 // ------------------- created elements -------------------
                 let ul = el
                 const PADDING_RESERVE = 25
                 const HEIGHT_MENU = 56
                 const liMore = document.createElement('li')
-                liMore.className = 'dsvc-more-am'
+                liMore.className = 'mul-more-am'
                 const liClean = document.createElement('li')
-                liClean.className = 'dsvc-clean-am'
+                liClean.className = 'mul-clean-am'
                 const divMoreText = document.createElement('div')
-                divMoreText.className = 'dsvc-more-text'
+                divMoreText.className = 'mul-more-text'
                 divMoreText.textContent = 'Ещё'
                 const ulDrop = document.createElement('ul')
-                ulDrop.className = 'dsvc-more-drop-am'
+                ulDrop.className = 'mul-more-drop-am'
                 liMore.append(divMoreText, ulDrop)
 
                 let flagMoreCreated = false // проверка создания more (ещё)
@@ -34,21 +34,19 @@ var MV = {
                 // ------------------- helpers -------------------
                 // инициализирум свои дропы т.к. бутстраповские ломаются
                 function initAppointDropdown() {
-                    let dropdownMenu = ul.querySelectorAll('.dsvc-dropdown')
+                    let dropdownMenu = ul.querySelectorAll('.mul-dropdown')
 
                     dropdownMenu.forEach((element) => {
-                        element
-                            .querySelector('.dsvc-dropdown-menu')
-                            .style.setProperty('--height-dropdown', HEIGHT_MENU + 'px')
+                        element.querySelector('.mul-dropdown-menu').style.setProperty('--height-dropdown', HEIGHT_MENU + 'px')
 
-                        let dropMenuList = element.querySelector('.dsvc-dropdown-menu')
+                        let dropMenuList = element.querySelector('.mul-dropdown-menu')
 
                         element.addEventListener('click', function(event) {
                             // Проверяем, был ли клик по ссылке или её дочерним элементам
-                            if (event.target.closest('.dsvc-dropdown-btn')) {
+                            if (event.target.closest('.mul-dropdown-btn')) {
                                 event.preventDefault()
                                 event.stopPropagation()
-                                dropMenuList.classList.toggle('dsvc-open-dropdown')
+                                dropMenuList.classList.toggle('mul-open-dropdown')
                             }
                         })
                     })
@@ -56,9 +54,9 @@ var MV = {
                     // Закрытие при клике вне dropdown
                     document.addEventListener('click', function(event) {
                         dropdownMenu.forEach((element) => {
-                            const menu = element.querySelector('.dsvc-dropdown-menu')
+                            const menu = element.querySelector('.mul-dropdown-menu')
                             if (!element.contains(event.target)) {
-                                menu.classList.remove('dsvc-open-dropdown')
+                                menu.classList.remove('mul-open-dropdown')
                             }
                         })
                     })
@@ -68,8 +66,8 @@ var MV = {
                     ulDrop.style.setProperty('--height-more', HEIGHT_MENU + 'px')
 
                     liMore.addEventListener('mouseenter', function() {
-                        if (!liMore.classList.contains('dsvc-open-am')) {
-                            liMore.classList.add('dsvc-open-am')
+                        if (!liMore.classList.contains('mul-open-am')) {
+                            liMore.classList.add('mul-open-am')
                         }
                     })
 
@@ -78,24 +76,25 @@ var MV = {
                     })
 
                     ulDrop.addEventListener('mouseleave', function() {
-                        let allDrop = document.querySelectorAll('.dsvc-dropdown-menu')
+                        let allDrop = document.querySelectorAll('.mul-dropdown-menu')
                         allDrop.forEach((element) => {
-                            element.classList.remove('dsvc-open-dropdown')
+                            element.classList.remove('mul-open-dropdown')
                         })
                         removeOpenClass(ulDrop)
                     })
 
                     function removeOpenClass(wrapper) {
-                        wrapper.classList.remove('dsvc-open-am')
+                        wrapper.classList.remove('mul-open-am')
                     }
                 }
+
                 // Обёртка для элементов внутри ещё для вычисления точной ширины	
                 function wrapContent(element, wrapperTag = 'div') {
                     if (!element) return null
-                    if (element.classList.contains('dsvc-inner-am')) return null
+                    if (element.classList.contains('mul-inner-am')) return null
 
                     const wrapper = document.createElement(wrapperTag)
-                    wrapper.className = 'dsvc-wrapper-am'
+                    wrapper.className = 'mul-wrapper-am'
 
                     // находим первый-level подменю (если есть) — элемент UL среди children
                     const subMenu = Array.from(element.children).find(
@@ -113,18 +112,19 @@ var MV = {
                     element.appendChild(wrapper)
                     if (subMenu) element.appendChild(subMenu)
 
-                    element.classList.add('dsvc-inner-am')
+                    element.classList.add('mul-inner-am')
                     return wrapper
                 }
+
                 // Удаление обёртки когда возвращаем пунткты назад в меню	
                 function unWrapContent(element) {
                     if (!element) return null
 
-                    element.classList.remove('dsvc-inner-am')
+                    element.classList.remove('mul-inner-am')
 
                     // ищем wrapper только среди прямых детей (children)
                     const wrapperDiv = Array.from(element.children).find((c) =>
-                        c.classList ? c.classList.contains('dsvc-wrapper-am') : false
+                        c.classList ? c.classList.contains('mul-wrapper-am') : false
                     )
                     const subMenu = Array.from(element.children).find(
                         (c) => c.tagName === 'UL'
@@ -149,8 +149,8 @@ var MV = {
                     return Array.from(ul.children).filter((node) => {
                         return (
                             node.tagName === 'LI' &&
-                            !node.classList.contains('dsvc-more-am') &&
-                            !node.classList.contains('dsvc-clean-am')
+                            !node.classList.contains('mul-more-am') &&
+                            !node.classList.contains('mul-clean-am')
                         )
                     })
                 }
@@ -181,44 +181,41 @@ var MV = {
 
                     ulBound = ul.getBoundingClientRect().right
 
-                    Array.from(listLi)
-                        .reverse()
-                        .forEach((element) => {
-                            let liBound = element.getBoundingClientRect().right
+                    Array.from(listLi).reverse().forEach((element) => {
+                        let liBound = element.getBoundingClientRect().right
 
-                            if (flagMoreCreated) {
-                                widthMore = el
-                                    .querySelector('.dsvc-more-am')
-                                    .getBoundingClientRect().width
-                                liBound = liBound + widthMore + PADDING_RESERVE // добавляем чтобы срабатывал чуть раньше чем коснётся ещё
+                        if (flagMoreCreated) {
+                            widthMore = el.querySelector('.mul-more-am').getBoundingClientRect().width
+                            liBound = liBound + widthMore + PADDING_RESERVE // добавляем чтобы срабатывал чуть раньше чем коснётся ещё
+                        }
+
+                        if (ulBound <= liBound) {
+                            if (!flagMoreCreated) {
+                                ul.append(liClean, liMore)
+                                flagMoreCreated = true
                             }
+                            wrapContent(element)
+                            ulDrop.prepend(element)
 
-                            if (ulBound <= liBound) {
-                                if (!flagMoreCreated) {
-                                    ul.append(liClean, liMore)
-                                    flagMoreCreated = true
-                                }
-                                wrapContent(element)
-                                ulDrop.prepend(element)
-
-                                if (!openListneer) {
-                                    openDrop(liMore, ulDrop)
-                                    openListneer = true
-                                }
-                                //appointDropdown('modifine')
-                                itemsFirstLi = null
-                                itemsWidthFirstLi = null
+                            if (!openListneer) {
+                                openDrop(liMore, ulDrop)
+                                openListneer = true
                             }
-                        })
+                            //appointDropdown('modifine')
+                            itemsFirstLi = null
+                            itemsWidthFirstLi = null
+                        }
+                    })
 
                     resetVariables()
                 }
+
                 // вытаскиваем пункты из ещё	
                 function disassemblyMenu() {
                     if (!flagMoreCreated) return // Если "Ещё" не создано, нечего возвращать
 
                     if (!itemsFirstLi) {
-                        itemsFirstLi = ul.querySelector('ul.dsvc-more-drop-am li:first-child')
+                        itemsFirstLi = ul.querySelector('ul.mul-more-drop-am li:first-child')
                     }
 
                     if (!itemsFirstLi) {
@@ -235,7 +232,7 @@ var MV = {
 
                     // Обрабатываем все элементы, которые могут поместиться
                     while (itemsFirstLi) {
-                        itemsWidthFirstLi = itemsFirstLi.querySelector('.dsvc-wrapper-am')
+                        itemsWidthFirstLi = itemsFirstLi.querySelector('.mul-wrapper-am')
                         if (!itemsWidthFirstLi) break
 
                         if (ulDrop.childNodes.length > 1) {
@@ -262,16 +259,16 @@ var MV = {
                                 listLiUpdated = Array.from(ul.children).filter((node) => {
                                     return (
                                         node.tagName === 'LI' &&
-                                        !node.classList.contains('dsvc-more-am') &&
-                                        !node.classList.contains('dsvc-clean-am')
+                                        !node.classList.contains('mul-more-am') &&
+                                        !node.classList.contains('mul-clean-am')
                                     )
                                 })
                             }
 
                             // референтная нода — вставляем прямо перед placeholder'ом (или перед more если clean нет)
                             const refNode =
-                                ul.querySelector('li.dsvc-clean-am') ||
-                                ul.querySelector('li.dsvc-more-am') ||
+                                ul.querySelector('li.mul-clean-am') ||
+                                ul.querySelector('li.mul-more-am') ||
                                 null
 
                             ul.insertBefore(itemsFirstLi, refNode)
@@ -280,7 +277,7 @@ var MV = {
 
                             // обновляем ссылку на следующий элемент в "Ещё"
                             itemsFirstLi = ul.querySelector(
-                                'ul.dsvc-more-drop-am li:first-child'
+                                'ul.mul-more-drop-am li:first-child'
                             )
 
                             if (!itemsFirstLi) {
@@ -324,10 +321,11 @@ var MV = {
                 // Инициализация при загрузке
                 initAppointDropdown()
                 buildMenu()
-                    // показываем все элементы после отработки скрипта
-                ul.classList.add("dsvc-ready");
-                //document.querySelector('.wrap-block-2').classList.add("dsvc-wrap-ready");
-                // document.querySelector('.wrap-block-3').classList.add("dsvc-wrap-ready");
+
+                // показываем все элементы после отработки скрипта
+                ul.classList.add("mul-ready");
+                //document.querySelector('.wrap-block-2').classList.add("mul-wrap-ready");
+                // document.querySelector('.wrap-block-3').classList.add("mul-wrap-ready");
             })
         })
     },
