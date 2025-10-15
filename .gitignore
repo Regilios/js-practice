@@ -1,4 +1,5 @@
-🔧git_in.md
+.gitignore
+git_in.md
 node_modules
 package-lock.json
-package.json
+My-useful-libraries/auto-menu-js/package.json
