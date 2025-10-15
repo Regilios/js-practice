@@ -1,4 +1,3 @@
- /************************ auto menu *************************/
  /* ===== ОСНОВНАЯ СТРУКТУРА МЕНЮ ===== */
  
  body {
@@ -74,13 +73,15 @@
  }
  
  .mul .mul-am li a {
-     padding: 1.125rem;
+     padding: 0 1.125rem;
      width: 100%;
      height: 100%;
      display: flex;
      align-items: center;
      white-space: pre-wrap;
      color: #0b2543;
+     min-height: 3.5rem;
+     text-decoration: none;
  }
  
  .mul .mul-am li:hover {
@@ -134,8 +135,9 @@
      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.82209 1.58919C0.643102 1.42654 0.614241 1.12991 0.757499 0.926692C0.900821 0.723565 1.1622 0.690813 1.34127 0.85339L5 4.17526L8.65873 0.85339C8.8378 0.690813 9.09918 0.723565 9.2425 0.926692C9.38576 1.12991 9.3569 1.42654 9.17791 1.58919L5.25959 5.1466C5.1079 5.28432 4.8921 5.28432 4.74041 5.1466L0.82209 1.58919Z' fill='%239099A3'/%3E%3Cpath d='M0.403384 2.17235C-0.0614245 1.74997 -0.13419 0.985037 0.235406 0.460736C0.608438 -0.0679512 1.29232 -0.155232 1.76023 0.26958L5 3.21163L8.23977 0.269579C8.70768 -0.155232 9.39156 -0.0679523 9.76459 0.460735C10.1342 0.985036 10.0614 1.74997 9.59662 2.17235L5.67842 5.73035C5.28241 6.08988 4.71759 6.08988 4.32158 5.73035L0.403384 2.17235Z' fill='black'/%3E%3C/svg%3E%0A");
  }
  
- .mul .mul-am .mul-dropdown:after {
+ .mul .mul-am .mul-dropdown a.mul-dropdown-btn:after {
      content: '';
+     z-index: 1;
      position: absolute;
      right: 0.75rem;
      top: calc(1.75rem - 0.1535rem);
@@ -227,6 +229,7 @@
      padding: 0 2.125rem 0 1.125rem;
      justify-content: flex-start;
      box-sizing: border-box;
+     text-decoration: none;
  }
  /* ===== МЕНЮ "ЕЩЕ" (MORE MENU) ===== */
  
