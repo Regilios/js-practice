@@ -1,0 +1,26 @@
+{
+    "name": "auto-menu-js",
+    "version": "1.0.0",
+    "main": "src/autoMenu.js",
+    "scripts": {
+        "minify:js": "terser src/autoMenu.js -o dist/autoMenu.min.js --compress --mangle",
+        "minify:css": "cssnano src/autoMenu.css > dist/autoMenu.min.css",
+        "build": "npm run minify:js && npm run minify:css"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Regilios/js-practice.git"
+    },
+    "keywords": ["menu", "navigation", "javascript"],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Regilios/js-practice/issues"
+    },
+    "homepage": "https://github.com/Regilios/js-practice#readme",
+    "description": "Auto-generated menu JavaScript library",
+    "devDependencies": {
+        "cssnano-cli": "^1.0.5",
+        "terser": "^5.44.0"
+    }
+}
