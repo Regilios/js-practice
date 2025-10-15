@@ -156,7 +156,6 @@ var MV = {
                 }
                 // сброс всех флагов
                 function resetVariables() {
-                    positionAppend = 0
                     listLiUpdated = null
                     itemsFirstLi = null
                     itemsWidthFirstLi = null
