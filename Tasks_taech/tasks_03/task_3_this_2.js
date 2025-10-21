@@ -260,6 +260,28 @@
             doThing(); //💡 ← вызов функции как free function Это не метод theSuperObj, даже если вызывается внутри theSuperObj.
         }
     }
-    theSuperObj.doSayName(theObj.returnFunction); // this is undefinded
+    theSuperObj.doSayName(theObj.returnFunction); // undefinded (т.к. мы передали в doSayName - function() { var doArrowThing = () => console.log("this is", this); return doArrowThing;}) выполнения doArrowThing не было нужно doArrowThing()
     theSuperObj.doSayName(theObj.returnFunction()); // this is {name: '1111', returnFunction: ƒ}
+}
+
+
+{
+    "use strict"
+    const theObj = {
+        name: '1111',
+        returnFunction: function() {
+            return function() {
+                console.log("this is", this.name); // Script snippet  Uncaught TypeError: Cannot read properties of undefined (reading 'name') идёт возврат новой функции она не привязана к  theObj потому не может найти свойство name
+            };
+        }
+    }
+
+    const theSuperObj = {
+        name: '2222',
+        doSayName: function(doThing) {
+            doThing(); //
+        }
+    }
+
+    theSuperObj.doSayName(theObj.returnFunction());
 }
