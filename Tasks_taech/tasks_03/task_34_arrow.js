@@ -4,13 +4,13 @@
  */
 
 function defer(f, ms) {
-    return function() {
-        setTimeout(() => f.apply(this, arguments), ms)
-    };
+  return function () {
+    setTimeout(() => f.apply(this, arguments), ms);
+  };
 }
 
 function sayHi(who) {
-    console.log('Hello, ' + who);
+  console.log("Hello, " + who);
 }
 
 let sayHiDeferred = defer(sayHi, 2000);
@@ -73,15 +73,15 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
   Если бы вместо стрелки мы написали обычную функцию:
  */
 {
-    let user = {
-        name: "John",
-        show: function() {
-            let arrow = () => console.log(this.name);
-            arrow();
-        }
-    };
+  let user = {
+    name: "John",
+    show: function () {
+      let arrow = () => console.log(this.name);
+      arrow();
+    },
+  };
 
-    user.show(); // "John"
+  user.show(); // "John"
 }
 /**
  * Разбор:
@@ -105,16 +105,16 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
  */
 
 {
-    let user = {
-        name: "Alice",
-        showLater: function() {
-            setTimeout(function() {
-                console.log("Обычная:", this.name);
-            }, 1000);
-        }
-    };
+  let user = {
+    name: "Alice",
+    showLater: function () {
+      setTimeout(function () {
+        console.log("Обычная:", this.name);
+      }, 1000);
+    },
+  };
 
-    user.showLater();
+  user.showLater();
 }
 /**
  * Через секунду в консоли: Обычная: undefined
@@ -131,16 +131,16 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
 
  */
 {
-    let user = {
-        name: "Alice",
-        showLater: function() {
-            setTimeout(() => {
-                console.log("Стрелочная:", this.name);
-            }, 1000);
-        }
-    };
+  let user = {
+    name: "Alice",
+    showLater: function () {
+      setTimeout(() => {
+        console.log("Стрелочная:", this.name);
+      }, 1000);
+    },
+  };
 
-    user.showLater();
+  user.showLater();
 }
 /**
  * Почему:
@@ -155,38 +155,14 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
  */
 
 {
-    let user = {
-        name: "Alice",
-        showLater: () => {
-            console.log("Обычная:", this.name);
-        }
-    };
+  let user = {
+    name: "Alice",
+    showLater: () => {
+      console.log("Обычная:", this.name);
+    },
+  };
 
-    user.showLater();
-} {
-    const Context = function() {
-        this.name = 'Marcus';
-        const city = {
-            name: 'Kiev',
-            year: 482,
-            f1: function() {
-                return this.name;
-            },
-            f2: () => {
-                return this.name;
-            },
-            f3() {
-                return this.name;
-            }
-        };
-        return city;
-    };
-
-    const city = new Context();
-
-    console.log('city.f1() = ' + city.f1());
-    console.log('city.f2() = ' + city.f2());
-    console.log('city.f3() = ' + city.f3());
+  user.showLater();
 }
 /**
  * 
@@ -200,23 +176,50 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
     };
  */
 
+{
+  const Context = function () {
+    this.name = "Marcus";
+    const city = {
+      name: "Avron",
+      year: 482,
+      f1: function () {
+        return this.name;
+      },
+      f2: () => {
+        return this.name;
+      },
+      f3() {
+        return this.name;
+      },
+    };
+    return city;
+  };
+
+  const city = new Context();
+
+  console.log("city.f1() = " + city.f1());
+  console.log("city.f2() = " + city.f2());
+  console.log("city.f3() = " + city.f3());
+}
 
 {
-    function makeFunctions() {
-        console.log("Внутри makeFunctions, this =", this);
+  function makeFunctions() {
+    console.log("Внутри makeFunctions, this =", this);
 
-        return {
-            arrow: () => console.log("arrow this =", this),
-            regular: function() { console.log("regular this =", this) }
-        };
-    }
+    return {
+      arrow: () => console.log("arrow this =", this),
+      regular: function () {
+        console.log("regular this =", this);
+      },
+    };
+  }
 
-    // Вызов №1
-    let obj1 = makeFunctions.call({ name: "Obj1" });
+  // Вызов №1
+  let obj1 = makeFunctions.call({ name: "Obj1" });
 
-    // Вызов №2
-    obj1.arrow(); // ?
-    obj1.regular(); // ?
+  // Вызов №2
+  obj1.arrow(); // ?
+  obj1.regular(); // ?
 }
 /* 
   В момент makeFunctions.call({ name: "Obj1" })
