@@ -76,6 +76,7 @@ class Child extends Base {}
 
 Base.create() instanceof Base; // true
 Child.create() instanceof Child; // true
+Math.max;
 /*
 Когда применять (правило выбора)
 
