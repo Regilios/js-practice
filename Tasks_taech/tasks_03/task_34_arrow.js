@@ -1,16 +1,16 @@
 /**
  * 🔸 Обычные функции (function) → this зависит от того, кто вызвал
-   🔸 Стрелочные функции (=>) → this зависит от того, где создали
+   🔸 Стрелочные функции (=>) → this зависит от того, где создали, контекст сохраняется только для стрелочной функции
  */
 
 function defer(f, ms) {
-    return function() {
-        setTimeout(() => f.apply(this, arguments), ms)
-    };
+  return function () {
+    setTimeout(() => f.apply(this, arguments), ms);
+  };
 }
 
 function sayHi(who) {
-    console.log('Hello, ' + who);
+  console.log("Hello, " + who);
 }
 
 let sayHiDeferred = defer(sayHi, 2000);
@@ -64,8 +64,7 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
 
   Почему this не стал setTimeout
 
-  Ты подумал логично — ведь стрелочная функция передаётся в setTimeout,
-  и можно было ожидать, что контекст поменяется.
+  Ты подумал логично — ведь стрелочная функция передаётся в setTimeout, и можно было ожидать, что контекст поменяется.
 
   Но стрелочные функции не создают собственного this вообще —
   они просто берут this из лексического окружения, где они были созданы.
@@ -74,25 +73,23 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
   Если бы вместо стрелки мы написали обычную функцию:
  */
 {
-    let user = {
-        name: "John",
-        show: function() {
-            let arrow = () => console.log(this.name);
-            arrow();
-        }
-    };
+  let user = {
+    name: "John",
+    show: function () {
+      let arrow = () => console.log(this.name);
+      arrow();
+    },
+  };
 
-    user.show(); // "John"
+  user.show(); // "John"
 }
 /**
  * Разбор:
   Обычная функция show создаёт собственный this (=user при вызове user.show()).
   Внутри неё мы создаём стрелку arrow.
 
-  Стрелка берёт this не из вызова, а из места, где она создана,
-  то есть из функции show, у которой this = user.
-  Поэтому arrow() печатает "John",
-  даже если её вызвать просто, без контекста.
+  Стрелка берёт this не из вызова, а из места, где она создана, то есть из функции show, у которой this = user.
+  Поэтому arrow() печатает "John", даже если её вызвать просто, без контекста.
 
   Стрелочные функции:
 
@@ -108,16 +105,16 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
  */
 
 {
-    let user = {
-        name: "Alice",
-        showLater: function() {
-            setTimeout(function() {
-                console.log("Обычная:", this.name);
-            }, 1000);
-        }
-    };
+  let user = {
+    name: "Alice",
+    showLater: function () {
+      setTimeout(function () {
+        console.log("Обычная:", this.name);
+      }, 1000);
+    },
+  };
 
-    user.showLater();
+  user.showLater();
 }
 /**
  * Через секунду в консоли: Обычная: undefined
@@ -134,16 +131,16 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
 
  */
 {
-    let user = {
-        name: "Alice",
-        showLater: function() {
-            setTimeout(() => {
-                console.log("Стрелочная:", this.name);
-            }, 1000);
-        }
-    };
+  let user = {
+    name: "Alice",
+    showLater: function () {
+      setTimeout(() => {
+        console.log("Стрелочная:", this.name);
+      }, 1000);
+    },
+  };
 
-    user.showLater();
+  user.showLater();
 }
 /**
  * Почему:
@@ -158,14 +155,14 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
  */
 
 {
-    let user = {
-        name: "Alice",
-        showLater: () => {
-            console.log("Обычная:", this.name);
-        }
-    };
+  let user = {
+    name: "Alice",
+    showLater: () => {
+      console.log("Обычная:", this.name);
+    },
+  };
 
-    user.showLater();
+  user.showLater();
 }
 /**
  * 
@@ -180,21 +177,49 @@ sayHiDeferred("John"); // выводит "Hello, John" через 2 секунд
  */
 
 {
-    function makeFunctions() {
-        console.log("Внутри makeFunctions, this =", this);
+  const Context = function () {
+    this.name = "Marcus";
+    const city = {
+      name: "Avron",
+      year: 482,
+      f1: function () {
+        return this.name;
+      },
+      f2: () => {
+        return this.name;
+      },
+      f3() {
+        return this.name;
+      },
+    };
+    return city;
+  };
 
-        return {
-            arrow: () => console.log("arrow this =", this),
-            regular: function() { console.log("regular this =", this) }
-        };
-    }
+  const city = new Context();
 
-    // Вызов №1
-    let obj1 = makeFunctions.call({ name: "Obj1" });
+  console.log("city.f1() = " + city.f1());
+  console.log("city.f2() = " + city.f2());
+  console.log("city.f3() = " + city.f3());
+}
 
-    // Вызов №2
-    obj1.arrow(); // ?
-    obj1.regular(); // ?
+{
+  function makeFunctions() {
+    console.log("Внутри makeFunctions, this =", this);
+
+    return {
+      arrow: () => console.log("arrow this =", this),
+      regular: function () {
+        console.log("regular this =", this);
+      },
+    };
+  }
+
+  // Вызов №1
+  let obj1 = makeFunctions.call({ name: "Obj1" });
+
+  // Вызов №2
+  obj1.arrow(); // ?
+  obj1.regular(); // ?
 }
 /* 
   В момент makeFunctions.call({ name: "Obj1" })
